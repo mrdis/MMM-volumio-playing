@@ -1,8 +1,6 @@
 Module.register("MMM-volumio-playing", {
 
     defaults: {
-        maxRows: 10,
-        fadePoint: 0.5,
         url: 'localhost',
     },
     
@@ -34,7 +32,7 @@ Module.register("MMM-volumio-playing", {
     },
 
     start: function () {
-        var socket = io(this.config.hostname);
+        var socket = io(this.config.url);
         var self=this;
         socket.on('pushState',function(message){
             self.playerState = {
