@@ -37,6 +37,7 @@ Module.register("MMM-volumio-playing", {
         socket.on('pushState',function(message){
             self.playerState = {
                 connected:message.uri!='',
+                service:  message.service,
                 state:    message.status,
                 title:    message.title,
                 artist:   message.artist,
@@ -59,7 +60,7 @@ Module.register("MMM-volumio-playing", {
 
     makeDiv: function(children,classes){
         var div = document.createElement('div');
-        if(children) for(c of children) div.appendChild(c);
+        if(children) for(c of children) if(c) div.appendChild(c);
         if(classes)  div.className=classes;
         return div;
     },
@@ -81,9 +82,13 @@ Module.register("MMM-volumio-playing", {
     updatePlayer: function(){
         var elapsed = (Date.now() - this.playerState.started)/1000;
         var duration = this.playerState.duration;
-        this.playerTime.innerHTML = this.getDuration(elapsed) + ' / ' + this.getDuration(duration);
-        this.playerBar.value = elapsed;
-        this.playerBar.max = duration;
+        this.playerTime.innerHTML = this.getDuration(elapsed);
+        if(duration)
+            this.playerTime.innerHTML += ' / ' + this.getDuration(duration);
+        if(this.playerBar){
+            this.playerBar.value = elapsed;
+            this.playerBar.max = duration || elapsed;
+        }
     },
 
     getPlayingContent: function(playerState) {
@@ -99,6 +104,18 @@ Module.register("MMM-volumio-playing", {
             this.makeDiv([this.makeIcon('fa fa-folder'), document.createTextNode(playerState.album)  ], 'infoText small'),
             this.makeDiv([this.makeIcon(playerIcon),     this.playerTime                             ], 'infoText small'),
             this.playerBar   
+        ]);
+    },
+
+    getRadioContent: function(playerState) {
+        this.playerTime = document.createElement('span');
+        this.updatePlayer();
+        
+        var playerIcon = playerState.state=='play'? 'fa fa-play' : 'fa fa-pause';
+        var radioInfo = playerState.title || playerState.artist;
+        return this.makeDiv([
+            this.makeDiv([this.makeIcon('fa fa-rss'),  document.createTextNode(radioInfo)  ], 'infoText small bright'),
+            this.makeDiv([this.makeIcon(playerIcon),     this.playerTime                             ], 'infoText small'),
         ]);
     },
 
@@ -125,8 +142,13 @@ Module.register("MMM-volumio-playing", {
         if(this.wrapper.firstChild)
             this.wrapper.removeChild(this.wrapper.firstChild);
         if(this.playerState.connected){
-            this.wrapper.appendChild(this.getPlayingContent(this.playerState));
-            this.wrapper.className="wrapper connected";
+            if(this.playerState.service=='webradio'){
+                this.wrapper.appendChild(this.getRadioContent(this.playerState));
+                this.wrapper.className="wrapper connected radio";
+            }else{
+                this.wrapper.appendChild(this.getPlayingContent(this.playerState));
+                this.wrapper.className="wrapper connected";
+            }
         }else{
             this.wrapper.appendChild(this.getDisconnectedContent());
             this.wrapper.className="wrapper disconnected";
