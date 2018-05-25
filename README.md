@@ -5,6 +5,9 @@
 A module for the [MagicMirror²](https://github.com/MichMich/MagicMirror/) that displays what
 a [Volumio](https://volumio.org/) device is currently playing.
 
+Inspired by [NowPlayingOnSpotify](https://github.com/raywo/MMM-NowPlayingOnSpotify) and
+[MMM-MPD](https://github.com/timjong93/MMM-MPD).
+
 ## Using the module
 
 To use this module, clone this repo to your `MagicMirror/modules/` directory.
