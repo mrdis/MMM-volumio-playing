@@ -1,0 +1,45 @@
+.MMM-volumio-playing .wrapper {
+    overflow: hidden;
+    transition: all 2s ease;
+    transition-property: max-height, min-height, opacity;
+}
+
+.MMM-volumio-playing .wrapper.connected {
+    max-height: 5em;
+    min-height: 5em;
+    opacity: 1;
+}
+.MMM-volumio-playing .wrapper.disconnected {
+    max-height: 1em;
+    min-height: 1em;
+    opacity: 0.5;
+}
+
+.MMM-volumio-playing .infoText {
+    max-width: 30ch;
+    overflow: hidden;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.MMM-volumio-playing .icon {
+    width: 1.5em;
+}
+
+.MMM-volumio-playing progress.player {
+    background-color: transparent;
+    border-radius: 1em;
+    border: 1px solid #aaaaaa;
+    height: 0.25em;
+    width: 100%;
+    vertical-align: 0.5em;
+}
+
+.MMM-volumio-playing progress[value].player::-webkit-progress-bar {
+    background-color: transparent;
+}
+  
+.MMM-volumio-playing progress[value].player::-webkit-progress-value {
+    background-color: #aaaaaa;
+}
